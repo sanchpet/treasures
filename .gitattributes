@@ -2,3 +2,5 @@
 *.yml linguist-language=YAML
 *.yaml linguist-detectable=true
 *.yaml linguist-language=YAML
+*.tf-example linguist-detectable=true
+*.tf-example linguist-language=HCL

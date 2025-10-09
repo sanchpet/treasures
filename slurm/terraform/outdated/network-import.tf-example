@@ -1,0 +1,49 @@
+import {
+  to = module.net.yandex_vpc_gateway.egress_gateway[0]
+  id = "enpkq1rhvse6d0d4mj84"
+}
+
+import {
+  to = module.net.yandex_vpc_network.this[0]
+  id = "enp28sjkbnh181nf2g2c"
+}
+
+import {
+  to = module.net.yandex_vpc_route_table.private[0]
+  id = "enpego0a5o4rdvd4ej13"
+}
+
+import {
+  to = module.net.yandex_vpc_route_table.public[0]
+  id = "enp52h06t6t08qhoagpu"
+}
+
+import {
+  to = module.net.yandex_vpc_subnet.public["192.168.10.0/24"]
+  id = "e9bvsaktkqkdekugeh34"
+}
+
+import {
+  to = module.net.yandex_vpc_subnet.public["192.168.11.0/24"]
+  id = "e2l5qavqduigiolo0v25"
+}
+
+import {
+  to = module.net.yandex_vpc_subnet.public["192.168.12.0/24"]
+  id = "fl80ff3416tcogrpj32c"
+}
+
+import {
+    to = yandex_vpc_address.this["ru-central1-d"]
+    id = "fl87pdtscksllgcl1ej7"
+}
+
+import {
+    to = yandex_vpc_address.this["ru-central1-b"]
+    id = "e2lqp259a9aor5sdm3ck"
+}
+
+import {
+    to = yandex_vpc_address.this["ru-central1-a"]
+    id = "e9buspghg74ndkbdgs4a"
+}

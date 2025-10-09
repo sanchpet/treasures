@@ -1,0 +1,29 @@
+import {
+    to = yandex_compute_disk.boot_disk["ru-central1-d"]
+    id = "fv4cdkmp0earpodkub48"
+}
+
+import {
+    to = yandex_compute_disk.boot_disk["ru-central1-a"]
+    id = "fhmf31fb46cjtde6ibng"
+}
+
+import {
+    to = yandex_compute_disk.boot_disk["ru-central1-b"]
+    id = "epd7ca58f5e4tpm0vjt4"
+}
+
+import {
+    to = yandex_compute_instance.vm["ru-central1-d"]
+    id = "fv4beqndvu89npnbtcoj"
+}
+
+import {
+    to = yandex_compute_instance.vm["ru-central1-b"]
+    id = "epdtjjc95n5fi5dhjgts"
+}
+
+import {
+    to = yandex_compute_instance.vm["ru-central1-a"]
+    id = "fhm7hk10d1pr16gv6v61"
+}
