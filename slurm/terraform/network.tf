@@ -30,3 +30,11 @@ resource "yandex_vpc_address" "this" {
     zone_id = each.value
   }
 }
+
+resource "yandex_vpc_address" "nlb" {
+    labels = local.labels
+    name = "${var.name_prefix}-nlb-address"
+  external_ipv4_address {
+    zone_id = "ru-central1-d"
+  }
+}

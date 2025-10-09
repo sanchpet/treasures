@@ -28,7 +28,7 @@ resource "yandex_compute_instance" "vm" {
   platform_id               = var.instance_resources.platform_id
   zone                      = each.value
   metadata = {
-    ssh-keys = "yc-user:${file("~/.ssh/id_ed25519.pub")}"
+    user-data = templatefile("${path.module}/templates/cloud-init.yaml.tpl", {})
   }
   labels = local.labels
 

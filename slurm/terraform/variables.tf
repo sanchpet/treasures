@@ -37,6 +37,32 @@ variable "subnets" {
   }
 }
 
+variable "nlb_name" {
+  description = "(Optional) - Name of the Network Load Balancer."
+  type        = string
+  default     = null
+}
+
+variable "nlb_listener_port" {
+  description = "(Optional) - Listener port of the Network Load Balancer."
+  type        = number
+  default     = 8080
+}
+
+variable "nlb_healthcheck" {
+    description = "(Optional) - NLB healthcheck customization"
+    type        = object({
+      name = optional(string, "http")
+      port = optional(number, 80)
+      path = optional(string, "/")
+    })
+    default = {
+      name = "http"
+      port = 80
+      path = "/"
+    }
+}
+
 ############ Compute settings ###########
 
 variable "boot_disk_name" {
