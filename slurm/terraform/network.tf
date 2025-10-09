@@ -8,11 +8,7 @@ module "net" {
   network_name = local.vpc_network_name
   create_sg    = false
 
-  labels = {
-    "created_by" = "terraform-yc-module"
-    "env" = "lab"
-    "project"    = var.name_prefix
-  }
+  labels = local.labels
 
   public_subnets = [
     for zone in var.zones :
@@ -26,6 +22,8 @@ module "net" {
 
 resource "yandex_vpc_address" "this" {
   for_each = var.zones
+
+  labels = local.labels
 
   name = length(var.zones) > 1 ? "${local.linux_vm_name}-address-${substr(each.value, -1, 0)}" : "${local.linux_vm_name}-address"
   external_ipv4_address {

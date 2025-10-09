@@ -13,6 +13,8 @@ resource "yandex_compute_disk" "boot_disk" {
   name     = length(var.zones) > 1 ? "${local.boot_disk_name}-${substr(each.value, -1, 0)}" : local.boot_disk_name
   zone     = each.value
   image_id = data.yandex_compute_image.ubuntu-2404-latest.id
+
+  labels = local.labels
   
   type = var.instance_resources.disk.disk_type
   size = var.instance_resources.disk.disk_size
@@ -28,6 +30,7 @@ resource "yandex_compute_instance" "vm" {
   metadata = {
     ssh-keys = "yc-user:${file("~/.ssh/id_ed25519.pub")}"
   }
+  labels = local.labels
 
   resources {
     cores  = var.instance_resources.cores

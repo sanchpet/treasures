@@ -11,6 +11,14 @@ variable "zones" {
   default     = ["ru-central1-a", "ru-central1-b", "ru-central1-d"]
 }
 
+locals {
+    labels = {
+        "created_by" = "terraform"
+        "env"        = "lab"
+        "project"    = var.name_prefix
+    }
+}
+
 ############ Network settings ###########
 
 variable "vpc_network_name" {
