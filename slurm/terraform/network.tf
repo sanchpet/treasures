@@ -20,14 +20,14 @@ module "net" {
   ]
 }
 
-resource "yandex_vpc_address" "this" {
-  for_each = var.zones
+resource "yandex_vpc_address" "vm" {
+  count = var.vm_count
 
   labels = local.labels
 
-  name = length(var.zones) > 1 ? "${local.linux_vm_name}-address-${substr(each.value, -1, 0)}" : "${local.linux_vm_name}-address"
+  name = var.vm_count > 1 ? "${local.linux_vm_name}-address-${substr(local.zones_list[count.index % length(local.zones_list)], -1, 0)}-${floor(count.index / length(local.zones_list))}" : "${local.linux_vm_name}-address"
   external_ipv4_address {
-    zone_id = each.value
+    zone_id = local.zones_list[count.index % length(local.zones_list)]
   }
 }
 

@@ -25,7 +25,7 @@ output "subnet_ids" {
 output "instance_public_ip_addresses" {
   description = "The external IP addresses of the instances."
   value = {
-    for address in yandex_vpc_address.this :
+    for address in yandex_vpc_address.vm :
     address.name => address.external_ipv4_address[0].address...
   }
 }

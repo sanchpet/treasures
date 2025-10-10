@@ -65,6 +65,12 @@ variable "nlb_healthcheck" {
 
 ############ Compute settings ###########
 
+variable "vm_count" {
+  description = "(Optional) - number of virtual machines"
+  type = number
+  default = 3
+}
+
 variable "boot_disk_name" {
   description = "(Optional) - Name of the boot disk."
   type        = string
