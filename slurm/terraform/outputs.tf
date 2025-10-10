@@ -37,3 +37,9 @@ output "nlb_public_ip_address" {
     listener.name => [for addr_spec in listener.external_address_spec : addr_spec.address][0]
   }
 }
+
+output "generated_private_ssh_key" {
+    description = "Generated ssh key"
+    value = var.public_ssh_key_path != null ? "" : tls_private_key.ed25519[0].private_key_openssh
+    sensitive = true
+}

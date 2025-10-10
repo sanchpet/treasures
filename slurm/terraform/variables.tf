@@ -98,3 +98,9 @@ variable "instance_resources" {
     }), {})
   })
 }
+
+variable "public_ssh_key_path" {
+    description = "(Optional) - set the path for your private key"
+    type = string
+    default = null
+}
