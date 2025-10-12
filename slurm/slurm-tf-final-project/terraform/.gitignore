@@ -1,0 +1,40 @@
+# Local .terraform directories
+**/.terraform/*
+.terraform.lock.hcl
+.terraform.tfstate.lock.info
+
+# State files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Sensitive variable files
+*.tfvars
+*.tfvars.json
+
+# Override files (local/test overrides)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Plan files
+*.tfplan
+
+# CLI configuration files
+.terraformrc
+terraform.rc
+
+# Environment and secret files
+.envrc
+*.pem
+*.key
+*.pub
+
+# IDE/project artifacts (optional)
+.vscode/
+.idea/
+*.pyc
