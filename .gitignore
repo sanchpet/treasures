@@ -1,0 +1,37 @@
+# VSCode settings and workspace files
+.vscode/
+*.code-workspace
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails and caches
+._*
+.Spotlight-V100
+.Trashes
+
+# Temporary files and backup files
+*.swp
+*.swo
+*.tmp
+*.bak
+
+# Node modules (if applicable)
+node_modules/
+
+# Python cache files (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs
+*.log
+
+# Others
+*.env
+.ansible
+
+# Repo where I can clone whatever I want
+clone-here/
