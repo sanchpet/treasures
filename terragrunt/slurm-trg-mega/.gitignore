@@ -1,0 +1,10 @@
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate*
+.terragrunt-cache
+.DS_Store
+.venv
+__pycache__
+# Local env and credentials
+yc.json
+.env

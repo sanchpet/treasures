@@ -1,0 +1,22 @@
+#cloud-config
+package_upgrade: true
+packages:
+  - nginx
+write_files:
+  - owner: www-data:www-data
+    path: /etc/nginx/sites-available/default
+    content: |
+      server {
+        listen 8080;
+        location / {
+          add_header Content-Type text/html;
+          return 200 'Hello from Yandex';
+        }
+        location /health {
+          add_header Content-Type text/html;
+          return 200 'HEALTHY';
+        }
+      }
+runcmd:
+  - systemctl enable nginx
+  - systemctl start nginx
