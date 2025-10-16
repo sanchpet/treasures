@@ -1,4 +1,4 @@
-FROM python:3.6.15-buster AS builder
+FROM python:3.8.20-bookworm AS builder
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-FROM python:3.6.15-slim
+FROM python:3.8.20-slim
 
 WORKDIR /app
 

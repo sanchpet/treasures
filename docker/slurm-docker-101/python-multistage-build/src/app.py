@@ -3,14 +3,13 @@ import os
 from flask import Flask, jsonify, request, abort, make_response
 from flask_sqlalchemy import SQLAlchemy
 
-from .models import User
+from .models import db, User
 from .config import app_config
 
 
 app = Flask(__name__)
 app.config.from_object(app_config[os.getenv('FLASK_ENV', 'production')])
-db = SQLAlchemy(app)
-
+db.init_app(app)
 
 @app.route('/api/v1/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
