@@ -1,0 +1,136 @@
+---
+workflow:
+  rules:
+    # Мы запускаем данный пайплайн для PR созданных против ветки Main
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH'
+      variables:
+        STAGING_PLAN: 'true'
+    #  Мы запускаем данный пайплайн по событиям с веткой Main
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      variables:
+        STAGING_PLAN: 'true'
+        STAGING_APPLY: 'true'
+    # Мы запускаем данный пайплайн по событиям с тегами
+    - if: '$CI_COMMIT_TAG =~ /^v.*/'
+      variables:
+        PRODUCTION_PLAN: 'true'
+        PRODUCTION_APPLY: 'true'
+    # Мы запускаем данный пайплайн по событиям запуска через UI
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      variables:
+        STAGING_APPLY: 'true'
+        PRODUCTION_APPLY: 'true'
+
+stages:
+  - prepare
+  - lint
+  - validate
+  - plan
+  - apply
+  - release
+
+variables:
+  TF_GITLAB_BACKEND_ADDRESS: 'https://gitlab.slurm.io/api/v4/projects/${CI_PROJECT_ID}/terraform/state'
+  TF_PLUGIN_CACHE_DIR: '$CI_PROJECT_DIR/.terraform.d/plugin-cache'
+  TF_CLI_CONFIG_FILE: '$CI_PROJECT_DIR/.slurm.tfrc'
+
+.terraform:
+  image: cytopia/terragrunt:1.3-0.40
+  cache:
+    - key: providers
+      paths:
+        - ${TF_PLUGIN_CACHE_DIR}
+  before_script:
+    - mkdir -p ${TF_PLUGIN_CACHE_DIR}
+    - cat $TERRAFORMRC > ${TF_CLI_CONFIG_FILE}
+
+Terragrunt:Init:
+  stage: prepare
+  extends: .terraform
+  script:
+    - terraform --version
+    - terragrunt --version
+    - terragrunt run-all init -upgrade
+  retry:
+    max: 2
+    when: script_failure
+
+Terraform:Format:
+  stage: lint
+  extends: .terraform
+  script: terraform fmt --recursive --check --diff
+  rules: &prRules
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+Terragrunt:Format:
+  stage: lint
+  extends: .terraform
+  script: terragrunt hclfmt --terragrunt-check
+  rules: *prRules
+
+Terragrunt:Validate:
+  stage: validate
+  extends: .terraform
+  script: terragrunt run-all validate
+  rules: *prRules
+
+Staging:Plan:
+  stage: plan
+  extends: .terraform
+  rules:
+    - if: $STAGING_PLAN == "true"
+    - if: $STAGING_APPLY == "true"
+  script:
+    - cd stage
+    - terragrunt run-all plan -out=plan.json
+  artifacts:
+    paths:
+      - stage/**/plan.json
+
+Staging:Apply:
+  stage: apply
+  extends: .terraform
+  rules:
+    - if: $STAGING_APPLY == "true" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $STAGING_APPLY == "true"
+      when: manual
+    - when: never
+  dependencies:
+    - "Staging:Plan"
+  script:
+    - cd stage
+    - terragrunt run-all --terragrunt-non-interactive apply -auto-approve plan.json || terragrunt run-all --terragrunt-non-interactive apply -auto-approve
+
+Production:Plan:
+  stage: plan
+  extends: .terraform
+  rules:
+    - if: $PRODUCTION_PLAN == "true"
+    - if: $PRODUCTION_APPLY == "true"
+  script:
+    - cd prod
+    - terragrunt run-all plan -out=plan.json
+  artifacts:
+    paths:
+      - prod/**/plan.json
+
+Production:Apply:
+  stage: apply
+  extends: .terraform
+  rules:
+    - if: $PRODUCTION_APPLY == "true"
+      when: manual
+    - when: never
+  dependencies:
+    - "Production:Plan"
+  script:
+    - cd prod
+    - terragrunt run-all --terragrunt-non-interactive apply -auto-approve plan.json || terragrunt run-all --terragrunt-non-interactive apply -auto-approve
+
+Release:Tag:
+  stage: release
+  image: registry.gitlab.com/juhani/go-semrel-gitlab:v0.21.1
+  script: release --bump-patch tag
+  rules:
+    # We run release creation from default branch only
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE == "push"'
