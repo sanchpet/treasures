@@ -4,3 +4,4 @@
 *.yaml linguist-language=YAML
 *.tf-example linguist-detectable=true
 *.tf-example linguist-language=HCL
+* text=auto
